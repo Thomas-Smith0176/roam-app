@@ -6,24 +6,13 @@ import mapStyle from "../assets/mapStyle.json"
 import { db } from "../config";
 import { getAuth } from "firebase/auth";
 import { collection, getDocs, query, where } from "firebase/firestore";
+import { Text } from "react-native";
 
 export default function MapScreen() {
   const [location, setLocation] = useState({});
   const [locationHistory, setLocationHistory] = useState([]);
-  const [region, setRegion] = useState(createGrid());
-
-
-  
-  // const userId = getAuth().currentUser.uid
-  // const q = query(collection(db, 'mapGrids'), where('userId', '==', userId))
-  // getDocs(q)
-  // .then((snapshot)=> {
-  //   console.log(snapshot)
-  //   return
-  // })
-
-
-  
+  const [isLoading, setIsLoading] = useState(true)
+  const [region, setRegion] = useState();
 
   useEffect(() => {
     const startLocationUpdates = () => {
@@ -45,6 +34,13 @@ export default function MapScreen() {
   }, []);
 
   useEffect(() => {
+    createGrid().then((grid) => {
+      setRegion(grid)
+      setIsLoading(false)
+    })
+  }, [])
+
+  useEffect(() => {
     setRegion((currRegion) => {
       const updatedRegion = currRegion.map((area) => {
         if (
@@ -63,6 +59,10 @@ export default function MapScreen() {
       return updatedRegion;
     });
   }, [location]);
+
+  if (isLoading) {
+    return <Text>Loading...</Text>
+  }
 
   return (
     <>

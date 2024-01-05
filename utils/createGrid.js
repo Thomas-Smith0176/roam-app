@@ -1,21 +1,38 @@
 import * as Location from "expo-location";
+import { getAuth } from "firebase/auth";
+import { collection, getDocs, query, where } from "firebase/firestore";
+import { db } from "../config";
+import { useState } from "react";
 
 const createGrid = () => {
 
-  let longitude = -1.58;
+  const [userLatitude, setUserLatitude] = useState()
+  const [userLongitude, seUserLongitude] = useState()
+
+  const userId = getAuth().currentUser.uid
+  const q = query(collection(db, 'mapGrids'), where('userId', '==', userId))
+  getDocs(q)
+  .then((snapshot)=> {
+    snapshot.forEach((doc) => {
+      setUserLatitude(doc._document.data.value.mapValue.fields.currentLocation.mapValue.fields.coords.mapValue.fields.latitude.doubleValue)
+      seUserLongitude(doc._document.data.value.mapValue.fields.currentLocation.mapValue.fields.coords.mapValue.fields.longitude.doubleValue)
+    })
+  })
+  .then(()=> {
+  let longitude = userLongitude - 0.05;
   let longGrid = [];
   let grid = [];
   let tiles = [];
   const longitudeInterval = 0.0025;
   const latitudeInterval = 0.0015;
 
-  while (longitude < -1.48 && longitude >= -1.58) {
+  while (longitude < userLongitude + 0.05 && longitude >= userLongitude - 0.05) {
     longGrid.push(longitude);
     longitude += longitudeInterval;
   }
   longGrid.forEach((long) => {
-    let latitude = 53.78;
-    while (latitude >= 53.78 && latitude < 53.83) {
+    let latitude = userLatitude - 0.025;
+    while (latitude >= userLatitude - 0.025 && latitude < userLatitude + 0.025) {
       let square = { longitude: long, latitude: null };
       square.latitude = latitude;
       latitude += latitudeInterval;
@@ -48,7 +65,10 @@ const createGrid = () => {
     });
   });
   console.log(tiles.length)
+
+  console.log(tiles.slice)
   return tiles
+})
 };
 
 function gridSquareId(){
