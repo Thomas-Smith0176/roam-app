@@ -3,19 +3,33 @@ import MapView, { Polyline, Polygon } from "../setup/map";
 import * as Location from "expo-location";
 import createGrid from "../utils/createGrid";
 import mapStyle from "../assets/mapStyle.json"
-import TabNavigator from "./TabNavigator";
+import { db } from "../config";
+import { getAuth } from "firebase/auth";
+import { collection, getDocs, query, where } from "firebase/firestore";
 
 export default function MapScreen() {
   const [location, setLocation] = useState({});
   const [locationHistory, setLocationHistory] = useState([]);
   const [region, setRegion] = useState(createGrid());
 
+
+  
+  // const userId = getAuth().currentUser.uid
+  // const q = query(collection(db, 'mapGrids'), where('userId', '==', userId))
+  // getDocs(q)
+  // .then((snapshot)=> {
+  //   console.log(snapshot)
+  //   return
+  // })
+
+
+  
+
   useEffect(() => {
     const startLocationUpdates = () => {
         return Location.watchPositionAsync(
           { accuracy: Location.Accuracy.Highest, timeInterval: 5000 },
           (location) => {
-            console.log(location)
             const newCoordinates = {
               latitude: location.coords.latitude,
               longitude: location.coords.longitude,
@@ -78,7 +92,6 @@ export default function MapScreen() {
         })}
       {location && <Polyline coordinates={locationHistory} strokeWidth={5} />}
     </MapView>
-    <TabNavigator/>
         </>
   );
 }

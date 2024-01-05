@@ -25,9 +25,9 @@ function handleCreateMap() {
             }
             return addDoc(mapGrids, mapGridData)
         })
-        .then(() => {
-            return navigation.navigate('MapScreen')
-        })
+        // .then(() => {
+        //     return navigation.navigate('MapScreen')
+        // })
     }
 
     useEffect(() => {
