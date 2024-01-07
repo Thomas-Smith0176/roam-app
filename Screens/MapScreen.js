@@ -3,6 +3,9 @@ import MapView, { Polyline, Polygon } from "../setup/map";
 import * as Location from "expo-location";
 import createGrid from "../utils/createGrid";
 import mapStyle from "../assets/mapStyle.json";
+import { db } from "../config";
+import { collection, getDocs, getDoc } from "firebase/firestore";
+
 export default function MapScreen() {
   const [location, setLocation] = useState({});
   const [locationHistory, setLocationHistory] = useState([]);
@@ -31,6 +34,23 @@ export default function MapScreen() {
     };
     startLocationUpdates();
   }, []);
+
+    useEffect(() => {
+      getDocs(collection(db, "mapGrids")).then((querySnapshot) => {
+        console.log(querySnapshot, "fromefirebase");
+        querySnapshot.forEach((docSnapshot) => {
+          console.log(docSnapshot.data(), "firebaseinfo");
+        });
+        // const landmarkArray = querySnapshot.docs.map((landmarkData) => {
+        //   return landmarkData._document.data.value.mapValue.fields;
+        // });
+        // return landmarkArray;
+        //   })
+        //   .then((array) => {
+        //     setFinalLandmarkArray(array);
+      });
+    }, []);
+
   useEffect(() => {
     setRegion((currRegion) => {
       const updatedRegion = currRegion.map((area) => {
