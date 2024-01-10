@@ -44,7 +44,7 @@ export default function MapScreen() {
           return "error";
         }
         return Location.watchPositionAsync(
-          { accuracy: Location.Accuracy.Highest, timeInterval: 5000 },
+          { accuracy: Location.Accuracy.Highest, timeInterval: 2000 },
           (location) => {
             const newCoordinates = {
               latitude: location.coords.latitude,
@@ -58,7 +58,7 @@ export default function MapScreen() {
               const geohash = Geohash.encode(
                 newCoordinates.latitude,
                 newCoordinates.longitude,
-                7
+                10
               );
               if (currGeo && currGeo.includes(geohash)) {
                 return currGeo;
