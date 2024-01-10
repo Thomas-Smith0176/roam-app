@@ -15,6 +15,7 @@ import { db } from "../config";
 import Modal from "react-native-modal";
 import { Pressable, Text, View, StyleSheet, TextInput } from "react-native";
 import { useNavigation } from "@react-navigation/core";
+import Geohash from "latlon-geohash";
 const customPin = "../assets/re-sized-landmark-pin.png";
 
 export default function MapScreen() {
@@ -27,6 +28,7 @@ export default function MapScreen() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [newLandmarkTitle, setNewLandmarkTitle] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const [locationHistoryGeohash, setLocationHistoryGeoHash] = useState([])
 
   function loadMaps() {
     return getDoc(doc(db, "Maps", "HJLCbJGvssb2onQTbiy4")).then((snapshot) => {
@@ -52,13 +54,24 @@ export default function MapScreen() {
             setLocationHistory((currHistory) => {
               return [...currHistory, newCoordinates];
             });
+            setLocationHistoryGeoHash((currGeo) => {
+              const geohash = Geohash.encode(
+                newCoordinates.latitude,
+                newCoordinates.longitude,
+                7
+              );
+              if (currGeo && currGeo.includes(geohash)) {
+                return currGeo;
+              } else {
+                return [...currGeo, geohash];
+              }
+            });
           }
         );
       });
     };
     startLocationUpdates();
   }, []);
-
   useEffect(() => {
     setRegion((currRegion) => {
       const updatedRegion = currRegion.map((area) => {
@@ -79,6 +92,7 @@ export default function MapScreen() {
     });
   }, [location]);
 
+  console.log(locationHistoryGeohash)
   useEffect(() => {
     const landmarkArray = [];
     getDocs(collection(db, "Landmarks"))
