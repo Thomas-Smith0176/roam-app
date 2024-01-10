@@ -1,5 +1,5 @@
 import * as Location from "expo-location";
-
+import Geohash from "latlon-geohash";
 const createGrid = () => {
 
   let longitude = -1.58;
@@ -25,31 +25,36 @@ const createGrid = () => {
   grid.forEach((latLong) => {
     tiles.push({
       location: [
+      //bottom left
         {
           latitude: latLong.latitude,
           longitude: latLong.longitude,
         },
+        //bottom right
         {
           latitude: latLong.latitude,
           longitude: latLong.longitude + longitudeInterval,
         },
+        //top right
         {
           latitude: latLong.latitude + latitudeInterval,
           longitude: latLong.longitude + longitudeInterval,
         },
+        //top left
         {
           latitude: latLong.latitude + latitudeInterval,
           longitude: latLong.longitude,
          },
        ],
       fill: true,
+      // geohash: Geohash.encode()
        sortLat: [latLong.latitude, latLong.latitude + latitudeInterval],
        sortLong: [latLong.longitude, latLong.longitude + longitudeInterval],
     });
   });
+  console.log(tiles[0])
   return tiles
 };
-
 function gridSquareId(){
   //we want two map collections on firebase
   //one stores map grids

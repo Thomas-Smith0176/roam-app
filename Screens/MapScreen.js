@@ -15,7 +15,7 @@ import { db } from "../config";
 import Modal from "react-native-modal";
 import { Pressable, Text, View, StyleSheet, TextInput } from "react-native";
 import { useNavigation } from "@react-navigation/core";
-import Geohash from "latlon-geohash";
+// import Geohash from "latlon-geohash";
 const customPin = "../assets/re-sized-landmark-pin.png";
 
 export default function MapScreen() {
@@ -28,7 +28,41 @@ export default function MapScreen() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [newLandmarkTitle, setNewLandmarkTitle] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-  const [locationHistoryGeohash, setLocationHistoryGeoHash] = useState([])
+  const [locationHistoryGeohash, setLocationHistoryGeoHash] = useState([
+    "9q9hvus6ve",
+    "gcwfhjyyc7",
+    "gcwfhjut3j",
+    "gcwfhjuvdw",
+    "gcwfhjvq0k",
+    "gcwfhjvw4m",
+    "gcwfhjynt9",
+    "gcwfhjywy1",
+    "gcwfhnnbks",
+    "gcwfhnngjk",
+    "gcwfhnnvvv",
+    "gcwfhnqbve",
+    "gcwfhnqgvh",
+    "gcwfhnrs26",
+    "gcwfhq25b4",
+    "gcwfhq2ejt",
+    "gcwfhq3d94",
+    "gcwfhq64zs",
+    "gcwfhq6ep8",
+    "gcwfhq7e4m",
+    "gcwfhqk529",
+    "gcwfhqku8u",
+    "gcwfhqmnpw",
+    "gcwfhqtbw7",
+    "gcwfhqw6ts",
+    "gcwfhqwttr",
+    "gcwfhqycng",
+    "gcwfhqz5wv",
+    "gcwfhqzuh6",
+    "gcwfhwb9v1",
+    "gcwfhw9nzc",
+    "gcwfhwd4cp",
+    "gcwfhwdckj",
+  ]);
 
   function loadMaps() {
     return getDoc(doc(db, "Maps", "HJLCbJGvssb2onQTbiy4")).then((snapshot) => {
@@ -54,18 +88,18 @@ export default function MapScreen() {
             setLocationHistory((currHistory) => {
               return [...currHistory, newCoordinates];
             });
-            setLocationHistoryGeoHash((currGeo) => {
-              const geohash = Geohash.encode(
-                newCoordinates.latitude,
-                newCoordinates.longitude,
-                10
-              );
-              if (currGeo && currGeo.includes(geohash)) {
-                return currGeo;
-              } else {
-                return [...currGeo, geohash];
-              }
-            });
+            // setLocationHistoryGeoHash((currGeo) => {
+            //   const geohash = Geohash.encode(
+            //     newCoordinates.latitude,
+            //     newCoordinates.longitude,
+            //     10
+            //   );
+            //   if (currGeo && currGeo.includes(geohash)) {
+            //     return currGeo;
+            //   } else {
+            //     return [...currGeo, geohash];
+            //   }
+            // });
           }
         );
       });
@@ -136,7 +170,7 @@ export default function MapScreen() {
     <View style={styles.container}>
       <View style={styles.mapView}>
         <MapView
-          minZoomLevel={15}
+          minZoomLevel={5}
           style={{ flex: 1, height: "100%" }}
           initialRegion={{
             latitude: 53.8,
