@@ -33,7 +33,6 @@ export default function MapScreen() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [newLandmarkTitle, setNewLandmarkTitle] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-  const customPin = "../assets/re-sized-landmark-pin.png";
 
   function loadMaps() {
     return getDoc(doc(db, "Maps", "HJLCbJGvssb2onQTbiy4")).then((snapshot) => {
@@ -199,10 +198,6 @@ export default function MapScreen() {
     </View>
   );
 }
-// <Image
-// source="require(../../../assets/cyclist-icon.png)"
-// style={styles.markerImage}
-// />
 
 const styles = StyleSheet.create({
   container: {
